@@ -4,11 +4,11 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-gray-200;
   }
   
   body {
-    @apply bg-background text-foreground;
+    @apply bg-white text-gray-900;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
@@ -19,23 +19,23 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background;
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-white;
   }
   
   .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800;
+    @apply bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800;
   }
   
   .btn-secondary {
-    @apply bg-secondary-100 text-secondary-900 hover:bg-secondary-200 active:bg-secondary-300;
+    @apply bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300;
   }
   
   .btn-outline {
-    @apply border border-secondary-300 bg-transparent hover:bg-secondary-50 active:bg-secondary-100;
+    @apply border border-gray-300 bg-transparent hover:bg-gray-50 active:bg-gray-100;
   }
   
   .btn-ghost {
-    @apply bg-transparent hover:bg-secondary-100 active:bg-secondary-200;
+    @apply bg-transparent hover:bg-gray-100 active:bg-gray-200;
   }
   
   .btn-sm {
@@ -51,11 +51,11 @@
   }
   
   .input {
-    @apply flex h-10 w-full rounded-md border border-secondary-300 bg-white px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-secondary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
   }
   
   .card {
-    @apply rounded-lg border border-secondary-200 bg-white text-secondary-950 shadow-soft;
+    @apply rounded-lg border border-gray-200 bg-white text-gray-950 shadow-sm;
   }
   
   .card-header {
@@ -67,7 +67,7 @@
   }
   
   .card-description {
-    @apply text-sm text-secondary-500;
+    @apply text-sm text-gray-500;
   }
   
   .card-content {
@@ -79,27 +79,27 @@
   }
   
   .badge {
-    @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
+    @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
   }
   
   .badge-default {
-    @apply border-transparent bg-primary-600 text-primary-50 hover:bg-primary-600/80;
+    @apply border-transparent bg-blue-600 text-blue-50 hover:bg-blue-600/80;
   }
   
   .badge-secondary {
-    @apply border-transparent bg-secondary-100 text-secondary-900 hover:bg-secondary-100/80;
+    @apply border-transparent bg-gray-100 text-gray-900 hover:bg-gray-100/80;
   }
   
   .badge-success {
-    @apply border-transparent bg-success-100 text-success-800 hover:bg-success-100/80;
+    @apply border-transparent bg-green-100 text-green-800 hover:bg-green-100/80;
   }
   
   .badge-warning {
-    @apply border-transparent bg-warning-100 text-warning-800 hover:bg-warning-100/80;
+    @apply border-transparent bg-yellow-100 text-yellow-800 hover:bg-yellow-100/80;
   }
   
   .badge-error {
-    @apply border-transparent bg-error-100 text-error-800 hover:bg-error-100/80;
+    @apply border-transparent bg-red-100 text-red-800 hover:bg-red-100/80;
   }
 }
 
@@ -118,7 +118,7 @@
   }
   
   .gradient-text {
-    @apply bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent;
   }
   
   .glass {
@@ -126,23 +126,23 @@
   }
   
   .seat-available {
-    @apply bg-success-100 border-success-300 text-success-800 hover:bg-success-200 cursor-pointer;
+    @apply bg-green-100 border-green-300 text-green-800 hover:bg-green-200 cursor-pointer;
   }
   
   .seat-selected {
-    @apply bg-primary-100 border-primary-300 text-primary-800;
+    @apply bg-blue-100 border-blue-300 text-blue-800;
   }
   
   .seat-reserved {
-    @apply bg-warning-100 border-warning-300 text-warning-800 cursor-not-allowed;
+    @apply bg-yellow-100 border-yellow-300 text-yellow-800 cursor-not-allowed;
   }
   
   .seat-sold {
-    @apply bg-error-100 border-error-300 text-error-800 cursor-not-allowed;
+    @apply bg-red-100 border-red-300 text-red-800 cursor-not-allowed;
   }
   
   .seat-maintenance {
-    @apply bg-secondary-100 border-secondary-300 text-secondary-800 cursor-not-allowed;
+    @apply bg-gray-100 border-gray-300 text-gray-800 cursor-not-allowed;
   }
 }
 
@@ -152,15 +152,15 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-secondary-100;
+  @apply bg-gray-100;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-secondary-300 rounded-full;
+  @apply bg-gray-300 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-secondary-400;
+  @apply bg-gray-400;
 }
 
 /* Loading animation */
