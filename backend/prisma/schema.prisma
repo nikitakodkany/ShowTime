@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  role      Role     @default(USER)
+  phone     String?
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  bookings Booking[]
+  reviews  Review[]
+
+  @@map("users")
+}
+
+model Venue {
+  id          String   @id @default(cuid())
+  name        String
+  address     String
+  city        String
+  state       String
+  zipCode     String
+  country     String
+  capacity    Int
+  description String?
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  events Event[]
+  seats  Seat[]
+
+  @@map("venues")
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  date        DateTime
+  duration    Int      // in minutes
+  price       Decimal  @db.Decimal(10, 2)
+  category    String
+  image       String?
+  status      EventStatus @default(UPCOMING)
+  venueId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  venue    Venue     @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  bookings Booking[]
+  reviews  Review[]
+
+  @@map("events")
+}
+
+model Seat {
+  id       String @id @default(cuid())
+  row      String
+  number   Int
+  section  String
+  price    Decimal @db.Decimal(10, 2)
+  status   SeatStatus @default(AVAILABLE)
+  venueId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  venue    Venue     @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  bookings Booking[]
+
+  @@unique([row, number, section, venueId])
+  @@map("seats")
+}
+
+model Booking {
+  id        String   @id @default(cuid())
+  userId    String
+  eventId   String
+  seatId    String
+  status    BookingStatus @default(PENDING)
+  totalPrice Decimal @db.Decimal(10, 2)
+  paymentId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  seat  Seat  @relation(fields: [seatId], references: [id], onDelete: Cascade)
+
+  @@map("bookings")
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  stripeId      String   @unique
+  amount        Decimal  @db.Decimal(10, 2)
+  currency      String   @default("usd")
+  status        PaymentStatus
+  bookingId     String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("payments")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String?
+  userId    String
+  eventId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+  @@map("reviews")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum EventStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum SeatStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+  MAINTENANCE
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+} 
