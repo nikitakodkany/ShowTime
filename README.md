@@ -1,4 +1,4 @@
-# 🎫 Ticket Event - Full-Stack Ticket Booking Platform
+# 🎫 Show Time - Full-Stack Ticket Booking Platform
 
 A modern, production-ready ticket booking application similar to Ticketmaster, built with React, Node.js, and PostgreSQL. Features real-time seat selection, secure payments, and comprehensive admin management.
 
