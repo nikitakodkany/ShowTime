@@ -8,12 +8,12 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 require('dotenv').config();
 
-const connectDB = require('./config/database');
+const connectDB = require('./config/database').connectDB;
 const authRoutes = require('./routes/auth');
 const eventRoutes = require('./routes/events');
 const venueRoutes = require('./routes/venues');
 const bookingRoutes = require('./routes/bookings');
-const paymentRoutes = require('./routes/payments');
+// const paymentRoutes = require('./routes/payments');
 const userRoutes = require('./routes/users');
 const { authenticateToken } = require('./middleware/auth');
 const { handleSocketConnection } = require('./socket/socketHandler');
@@ -66,7 +66,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/venues', venueRoutes);
 app.use('/api/bookings', authenticateToken, bookingRoutes);
-app.use('/api/payments', authenticateToken, paymentRoutes);
+// app.use('/api/payments', authenticateToken, paymentRoutes);
 app.use('/api/users', authenticateToken, userRoutes);
 
 // Socket.IO connection handling

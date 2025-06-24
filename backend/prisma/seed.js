@@ -38,10 +38,8 @@ async function main() {
 
   // Create venues
   const venues = await Promise.all([
-    prisma.venue.upsert({
-      where: { name: 'Madison Square Garden' },
-      update: {},
-      create: {
+    prisma.venue.create({
+      data: {
         name: 'Madison Square Garden',
         address: '4 Pennsylvania Plaza',
         city: 'New York',
@@ -53,10 +51,8 @@ async function main() {
         image: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=800'
       }
     }),
-    prisma.venue.upsert({
-      where: { name: 'Staples Center' },
-      update: {},
-      create: {
+    prisma.venue.create({
+      data: {
         name: 'Staples Center',
         address: '1111 S Figueroa St',
         city: 'Los Angeles',
@@ -68,10 +64,8 @@ async function main() {
         image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800'
       }
     }),
-    prisma.venue.upsert({
-      where: { name: 'O2 Arena' },
-      update: {},
-      create: {
+    prisma.venue.create({
+      data: {
         name: 'O2 Arena',
         address: 'Peninsula Square',
         city: 'London',
@@ -98,17 +92,8 @@ async function main() {
                        section === 'C' ? 100.00 :
                        section === 'D' ? 80.00 : 60.00;
           
-          await prisma.seat.upsert({
-            where: {
-              row_number_section_venueId: {
-                row,
-                number: seatNumber,
-                section,
-                venueId: venue.id
-              }
-            },
-            update: {},
-            create: {
+          await prisma.seat.create({
+            data: {
               row,
               number: seatNumber,
               section,
@@ -123,10 +108,8 @@ async function main() {
 
   // Create events
   const events = await Promise.all([
-    prisma.event.upsert({
-      where: { title: 'Taylor Swift - The Eras Tour' },
-      update: {},
-      create: {
+    prisma.event.create({
+      data: {
         title: 'Taylor Swift - The Eras Tour',
         description: 'Experience the magic of Taylor Swift\'s greatest hits across all eras in this spectacular concert.',
         date: new Date('2024-06-15T20:00:00Z'),
@@ -137,10 +120,8 @@ async function main() {
         image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800'
       }
     }),
-    prisma.event.upsert({
-      where: { title: 'NBA Finals Game 7' },
-      update: {},
-      create: {
+    prisma.event.create({
+      data: {
         title: 'NBA Finals Game 7',
         description: 'The ultimate showdown in basketball. Lakers vs Celtics in the championship game.',
         date: new Date('2024-06-20T19:30:00Z'),
@@ -151,10 +132,8 @@ async function main() {
         image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800'
       }
     }),
-    prisma.event.upsert({
-      where: { title: 'Ed Sheeran - Mathematics Tour' },
-      update: {},
-      create: {
+    prisma.event.create({
+      data: {
         title: 'Ed Sheeran - Mathematics Tour',
         description: 'Join Ed Sheeran for an intimate evening of acoustic magic and chart-topping hits.',
         date: new Date('2024-07-10T19:00:00Z'),
@@ -165,10 +144,8 @@ async function main() {
         image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800'
       }
     }),
-    prisma.event.upsert({
-      where: { title: 'Hamilton - The Musical' },
-      update: {},
-      create: {
+    prisma.event.create({
+      data: {
         title: 'Hamilton - The Musical',
         description: 'The revolutionary story of America\'s founding fathers told through hip-hop and R&B.',
         date: new Date('2024-08-05T20:00:00Z'),
@@ -179,10 +156,8 @@ async function main() {
         image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800'
       }
     }),
-    prisma.event.upsert({
-      where: { title: 'UFC 300: Championship Night' },
-      update: {},
-      create: {
+    prisma.event.create({
+      data: {
         title: 'UFC 300: Championship Night',
         description: 'Witness the biggest night in UFC history with multiple championship fights.',
         date: new Date('2024-09-15T18:00:00Z'),
@@ -202,11 +177,8 @@ async function main() {
   });
 
   for (let i = 0; i < 3; i++) {
-    await prisma.booking.upsert({
-      where: { id: `sample-booking-${i + 1}` },
-      update: {},
-      create: {
-        id: `sample-booking-${i + 1}`,
+    await prisma.booking.create({
+      data: {
         userId: user.id,
         eventId: events[0].id, // Taylor Swift concert
         seatId: sampleSeats[i].id,

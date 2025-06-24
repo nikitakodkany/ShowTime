@@ -1,6 +1,6 @@
 const express = require('express');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { body, validationResult } = require('express-validator');
+const { body, query, validationResult } = require('express-validator');
 const { prisma } = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
 
