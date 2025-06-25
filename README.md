@@ -1,21 +1,31 @@
 # 🎫 Show Time - Full-Stack Ticket Booking Platform
 
-A modern, production-ready ticket booking application similar to Ticketmaster, built with React, Node.js, and PostgreSQL. Features real-time seat selection, secure payments, and comprehensive admin management.
+A modern, production-ready ticket booking application similar to Ticketmaster, built with React, Node.js, and PostgreSQL. Features real-time seat selection, secure payments, comprehensive search and filtering, and Ticketmaster API integration.
 
 ![Ticket Event Platform](https://img.shields.io/badge/React-18.2.0-blue?style=for-the-badge&logo=react)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-green?style=for-the-badge&logo=node.js)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue?style=for-the-badge&logo=postgresql)
 ![Docker](https://img.shields.io/badge/Docker-Ready-blue?style=for-the-badge&logo=docker)
+![Ticketmaster API](https://img.shields.io/badge/Ticketmaster-API-orange?style=for-the-badge)
 
 ## ✨ Features
 
 ### 🎭 For Event Attendees
-- **Browse Events**: Search and filter events by category, date, and location
+- **Advanced Event Discovery**: 
+  - 🔍 **Smart Search**: Search by event name, artist, venue, or location
+  - 📍 **Location Filtering**: Find events in specific cities or regions
+  - 📅 **Date Filtering**: Filter by today, this week, this month, or all dates
+  - 💰 **Price Filtering**: Filter by price ranges (Under $50, $50-$100, $100-$200, Over $200)
+  - 🎯 **Category Filtering**: Browse by Concert, Theater, Sports, or All events
+  - 📊 **Sorting Options**: Sort by date, price, or name
+  - 🎨 **Real-time Results**: Instant filtering and search results
+- **Ticketmaster Integration**: Real event data from Ticketmaster API with live pricing and availability
 - **Interactive Seat Selection**: Real-time seat map with live availability updates
 - **Secure Booking**: 5-minute seat holds with automatic release
 - **Payment Processing**: Stripe integration for secure ticket purchases
 - **User Dashboard**: View booking history and manage profile
 - **Mobile Responsive**: Optimized for all device sizes
+- **Beautiful UI**: Modern design with Tailwind CSS and smooth animations
 
 ### 👨‍💼 For Administrators
 - **Event Management**: Create, edit, and delete events with rich details
@@ -31,6 +41,9 @@ A modern, production-ready ticket booking application similar to Ticketmaster, b
 - **API**: RESTful API with comprehensive validation and error handling
 - **Security**: Rate limiting, CORS, input validation, and security headers
 - **Docker Support**: Complete containerization for easy deployment
+- **External APIs**: Ticketmaster API integration for real event data
+- **Search & Filter Engine**: Advanced client-side filtering with real-time updates
+- **Error Handling**: Graceful fallbacks and user-friendly error messages
 
 ## 🏗️ Architecture
 
@@ -48,14 +61,14 @@ ticket-event-app/
 │   └── 📦 package.json           # Backend dependencies
 ├── 📁 frontend/                   # React Application
 │   ├── 📁 src/
-│   │   ├── 📁 components/        # Reusable UI components
 │   │   ├── 📁 contexts/          # React contexts (Auth, Socket)
-│   │   ├── 📁 hooks/             # Custom React hooks
-│   │   ├── 📁 pages/             # Page components
-│   │   ├── 📁 services/          # API service layer
-│   │   └── 📁 utils/             # Utility functions
+│   │   ├── 🎨 index.css          # Tailwind CSS styles
+│   │   ├── 🖥️ App.jsx            # Main application component
+│   │   └── 🚀 main.jsx           # Application entry point
 │   ├── 🐳 Dockerfile             # Frontend container configuration
 │   ├── 🌐 nginx.conf             # Nginx reverse proxy config
+│   ├── 🎨 tailwind.config.js     # Tailwind CSS configuration
+│   ├── ⚡ vite.config.js         # Vite build configuration
 │   └── 📦 package.json           # Frontend dependencies
 ├── 🐳 docker-compose.yml         # Multi-service orchestration
 ├── 📦 package.json               # Monorepo configuration
@@ -87,11 +100,17 @@ ticket-event-app/
    # Copy environment template
    cp backend/env.example backend/.env
    
-   # Edit backend/.env with your configuration
+   # Create frontend environment file
+   touch frontend/.env
+   
+   # Edit both files with your configuration
    nano backend/.env
+   nano frontend/.env
    ```
 
 4. **Configure your environment variables**
+
+   **Backend (.env):**
    ```env
    # Database
    DATABASE_URL="postgresql://username:password@localhost:5432/ticket_event_db"
@@ -111,6 +130,12 @@ ticket-event-app/
    
    # CORS
    CORS_ORIGIN="http://localhost:3000"
+   ```
+
+   **Frontend (.env):**
+   ```env
+   # Ticketmaster API (get from https://developer.ticketmaster.com/)
+   VITE_TICKETMASTER_API_KEY=your_ticketmaster_api_key_here
    ```
 
 5. **Set up the database**
@@ -151,6 +176,41 @@ The seed script creates these accounts for testing:
 | 👨‍💼 Admin | `admin@ticketevent.com` | `admin123` |
 | 👤 User | `user@ticketevent.com` | `user123` |
 
+## 🎯 How to Use the Search & Filter Features
+
+### 🔍 Search Functionality
+- **Search Bar**: Type to search for events, artists, venues, or locations
+- **Real-time Results**: Results update as you type
+- **Location Filter**: Enter a city name to find events in that location
+
+### 🎛️ Advanced Filters
+1. **Click "Show Filters"** to expand the advanced filtering panel
+2. **Date Range**: Choose from:
+   - All Dates
+   - Today
+   - This Week
+   - This Month
+3. **Price Range**: Filter by:
+   - All Prices
+   - Under $50
+   - $50 - $100
+   - $100 - $200
+   - Over $200
+4. **Sort Options**: Sort by:
+   - Date (earliest first)
+   - Price (lowest first)
+   - Name (alphabetical)
+
+### 🎨 Category Filtering
+- **All**: Shows all events
+- **Concert**: Music concerts and performances
+- **Theater**: Theater shows and plays
+- **Sports**: Sporting events
+
+### 🧹 Clear Filters
+- Use the **"Clear Filters"** button to reset all search and filter options
+- Results summary shows how many events match your criteria
+
 ## 📚 API Documentation
 
 ### Authentication Endpoints
@@ -188,230 +248,114 @@ GET    /api/venues/:id             # Get venue details
 POST   /api/venues                 # Create venue (admin only)
 PUT    /api/venues/:id             # Update venue (admin only)
 DELETE /api/venues/:id             # Delete venue (admin only)
-GET    /api/venues/:id/seats       # Get venue seats (admin only)
-POST   /api/venues/:id/seats       # Create venue seats (admin only)
 ```
 
-### Payment Endpoints
+### User Endpoints
 ```
-POST   /api/payments/create-intent # Create Stripe payment intent
-POST   /api/payments/confirm       # Confirm payment
-GET    /api/payments/history       # Get payment history
-POST   /api/payments/webhook       # Stripe webhook handler
-POST   /api/payments/refund/:id    # Process refund (admin only)
-```
-
-### User Management (Admin Only)
-```
-GET    /api/users                  # List all users
+GET    /api/users                  # Get all users (admin only)
 GET    /api/users/:id              # Get user details
-PUT    /api/users/:id/role         # Update user role
-GET    /api/users/admin/statistics # Get user statistics
+PUT    /api/users/:id              # Update user (admin only)
+DELETE /api/users/:id              # Delete user (admin only)
 ```
 
-## 🛠️ Development
+## 🔧 Development Scripts
 
-### Available Scripts
+### Root Level Commands
+```bash
+npm run dev              # Start both frontend and backend
+npm run dev:frontend     # Start only frontend
+npm run dev:backend      # Start only backend
+npm run install:all      # Install dependencies for all packages
+npm run build            # Build both frontend and backend
+npm run test             # Run tests for all packages
+npm run docker:build     # Build Docker images
+npm run docker:up        # Start Docker containers
+npm run docker:down      # Stop Docker containers
+```
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start both frontend and backend in development mode |
-| `npm run dev:frontend` | Start only frontend development server |
-| `npm run dev:backend` | Start only backend development server |
-| `npm run build` | Build both frontend and backend for production |
-| `npm run lint` | Run ESLint on both frontend and backend |
-| `npm run lint:fix` | Fix ESLint errors automatically |
-| `npm run format` | Format code with Prettier |
-| `npm run docker:build` | Build Docker containers |
-| `npm run docker:up` | Start Docker containers |
-| `npm run docker:down` | Stop Docker containers |
-
-### Database Management
-
+### Backend Commands
 ```bash
 cd backend
-
-# Run database migrations
-npm run db:migrate
-
-# Seed database with sample data
-npm run db:seed
-
-# Reset database (drops all data)
-npm run db:reset
-
-# Open Prisma Studio (database GUI)
-npm run db:studio
-
-# Generate Prisma client
-npm run db:generate
+npm run dev              # Start development server with nodemon
+npm run start            # Start production server
+npm run db:migrate       # Run database migrations
+npm run db:seed          # Seed database with sample data
+npm run db:reset         # Reset database (migrate + seed)
+npm run test             # Run backend tests
 ```
 
-### Environment Variables
-
-#### Backend (.env)
-```env
-# Database
-DATABASE_URL="postgresql://username:password@localhost:5432/ticket_event_db"
-
-# JWT
-JWT_SECRET="your-super-secret-jwt-key"
-JWT_EXPIRES_IN="7d"
-
-# Server
-PORT=5000
-NODE_ENV="development"
-
-# Stripe
-STRIPE_SECRET_KEY="sk_test_..."
-STRIPE_WEBHOOK_SECRET="whsec_..."
-STRIPE_PUBLISHABLE_KEY="pk_test_..."
-
-# Email (optional)
-SMTP_HOST="smtp.gmail.com"
-SMTP_PORT=587
-SMTP_USER="your-email@gmail.com"
-SMTP_PASS="your-app-password"
-
-# File Upload
-UPLOAD_PATH="./uploads"
-MAX_FILE_SIZE=5242880
-
-# CORS
-CORS_ORIGIN="http://localhost:3000"
-
-# Rate Limiting
-RATE_LIMIT_WINDOW_MS=900000
-RATE_LIMIT_MAX_REQUESTS=100
+### Frontend Commands
+```bash
+cd frontend
+npm run dev              # Start Vite development server
+npm run build            # Build for production
+npm run preview          # Preview production build
+npm run test             # Run frontend tests
 ```
 
-#### Frontend (.env)
-```env
-VITE_API_URL=http://localhost:5000
-VITE_STRIPE_PUBLISHABLE_KEY=pk_test_...
-```
+## 🛡️ Security Features
 
-## 🔧 Technology Stack
-
-### Backend
-- **Runtime**: Node.js 18+
-- **Framework**: Express.js
-- **Database**: PostgreSQL 15+ with Prisma ORM
-- **Authentication**: JWT with bcrypt
-- **Real-time**: Socket.IO
-- **Payments**: Stripe API
-- **Validation**: Express-validator
-- **Security**: Helmet, CORS, rate limiting
-- **File Upload**: Multer with Sharp
-
-### Frontend
-- **Framework**: React 18 with Vite
-- **Styling**: Tailwind CSS
-- **State Management**: React Query + Context API
-- **Routing**: React Router DOM
-- **Real-time**: Socket.IO Client
-- **Payments**: Stripe Elements
-- **Forms**: React Hook Form
-- **Icons**: Lucide React
-- **Notifications**: React Hot Toast
-
-### Infrastructure
-- **Containerization**: Docker & Docker Compose
-- **Web Server**: Nginx
-- **Database**: PostgreSQL
-- **Caching**: Redis (optional)
-- **Process Manager**: PM2 (production)
+- **JWT Authentication**: Secure token-based authentication
+- **Role-based Access Control**: Admin and user role management
+- **Input Validation**: Comprehensive request validation
+- **Rate Limiting**: API rate limiting to prevent abuse
+- **CORS Protection**: Cross-origin resource sharing configuration
+- **SQL Injection Prevention**: Prisma ORM with parameterized queries
+- **XSS Protection**: Content Security Policy headers
+- **HTTPS Ready**: Secure headers and SSL configuration
 
 ## 🚀 Deployment
 
-### Production Deployment with Docker
+### Production Environment Variables
+```env
+# Backend
+NODE_ENV=production
+DATABASE_URL=your_production_database_url
+JWT_SECRET=your_production_jwt_secret
+STRIPE_SECRET_KEY=your_production_stripe_key
+CORS_ORIGIN=https://yourdomain.com
 
-1. **Set production environment variables**
-   ```bash
-   # Create production .env files
-   cp backend/env.example backend/.env.production
-   cp frontend/.env.example frontend/.env.production
-   ```
+# Frontend
+VITE_TICKETMASTER_API_KEY=your_production_ticketmaster_key
+```
 
-2. **Build and deploy**
-   ```bash
-   # Build production images
-   docker-compose -f docker-compose.prod.yml build
+### Docker Production Build
+```bash
+# Build production images
+docker-compose -f docker-compose.prod.yml build
 
-   # Start production services
-   docker-compose -f docker-compose.prod.yml up -d
-   ```
-
-### Environment-Specific Configurations
-
-- **Development**: Hot reload, detailed logging, CORS enabled
-- **Production**: Optimized builds, security headers, rate limiting
-- **Testing**: Separate database, mock services
-
-## 🔒 Security Features
-
-- **Authentication**: JWT tokens with secure storage
-- **Authorization**: Role-based access control (User/Admin)
-- **Input Validation**: Comprehensive request validation
-- **Rate Limiting**: API rate limiting to prevent abuse
-- **CORS**: Configured CORS policies
-- **Security Headers**: Helmet.js for security headers
-- **SQL Injection Protection**: Prisma ORM with parameterized queries
-- **XSS Protection**: Input sanitization and output encoding
-
-## 📊 Performance Features
-
-- **Database Optimization**: Indexed queries, efficient relationships
-- **Caching**: Redis for session storage and caching
-- **Image Optimization**: Sharp for image processing
-- **Code Splitting**: React lazy loading and dynamic imports
-- **Gzip Compression**: Nginx compression for static assets
-- **CDN Ready**: Static asset optimization for CDN deployment
+# Start production services
+docker-compose -f docker-compose.prod.yml up -d
+```
 
 ## 🤝 Contributing
 
-1. **Fork the repository**
-2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
-3. **Make your changes** and add tests if applicable
-4. **Run linting**: `npm run lint`
-5. **Commit your changes**: `git commit -m 'Add amazing feature'`
-6. **Push to the branch**: `git push origin feature/amazing-feature`
-7. **Open a Pull Request**
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### Development Guidelines
-
-- Follow the existing code style and conventions
-- Add appropriate error handling and validation
-- Write meaningful commit messages
-- Test your changes thoroughly
-- Update documentation as needed
-
-## 📝 License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## 🙏 Acknowledgments
+
+- **Ticketmaster API** for providing real event data
+- **Tailwind CSS** for the beautiful UI components
+- **Prisma** for the excellent database ORM
+- **Socket.IO** for real-time functionality
+- **Stripe** for secure payment processing
+
+## 📞 Support
 
 If you encounter any issues or have questions:
 
-1. **Check the documentation** in this README
-2. **Search existing issues** in the repository
-3. **Create a new issue** with detailed information
-4. **Contact the maintainers** for urgent support
-
-## 🎯 Roadmap
-
-- [ ] **Email Notifications**: Booking confirmations and reminders
-- [ ] **Mobile App**: React Native mobile application
-- [ ] **Analytics Dashboard**: Advanced reporting and insights
-- [ ] **Multi-language Support**: Internationalization (i18n)
-- [ ] **Social Login**: Google, Facebook, Apple authentication
-- [ ] **QR Code Tickets**: Digital ticket generation
-- [ ] **Waitlist System**: Automatic waitlist management
-- [ ] **Bulk Operations**: Mass event/venue management
-- [ ] **API Rate Limiting**: Tiered API access
-- [ ] **Webhook System**: Third-party integrations
+1. Check the [Issues](https://github.com/yourusername/ticket-event-app/issues) page
+2. Create a new issue with detailed information
+3. Contact the development team
 
 ---
 
-**Built with ❤️ using modern web technologies**
+**Made with ❤️ by the Show Time Team**
