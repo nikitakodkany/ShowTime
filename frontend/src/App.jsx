@@ -25,6 +25,17 @@ export default function App() {
   const [sortBy, setSortBy] = useState("date"); // date, price, name
   const [showFilters, setShowFilters] = useState(false);
 
+  // Add new state for user profile, favorites, and dashboard
+  const [user, setUser] = useState({
+    name: "Jane Doe",
+    email: "jane@example.com",
+    preferences: { favoriteArtists: [], favoriteVenues: [] },
+    bookingHistory: []
+  });
+  const [favorites, setFavorites] = useState({ artists: [], venues: [] });
+  const [recommendations, setRecommendations] = useState([]);
+  const [dashboardEvents, setDashboardEvents] = useState([]);
+
   // Fetch events from Ticketmaster API
   const fetchEvents = async (category = "All", size = 50) => {
     setLoading(true);
@@ -296,6 +307,48 @@ export default function App() {
   const categories = ["All", "Concert", "Theater", "Sports"];
   const filteredEvents = getFilteredAndSortedEvents();
 
+  // Add navigation bar
+  function NavigationBar() {
+    return (
+      <nav className="bg-white shadow-sm border-b mb-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-3">
+          <div className="flex items-center space-x-4">
+            <button onClick={() => setCurrentView("dashboard")} className={`text-sm font-medium ${currentView === "dashboard" ? "text-blue-600" : "text-gray-700"}`}>Dashboard</button>
+            <button onClick={() => setCurrentView("events")} className={`text-sm font-medium ${currentView === "events" ? "text-blue-600" : "text-gray-700"}`}>Events</button>
+            <button onClick={() => setCurrentView("profile")} className={`text-sm font-medium ${currentView === "profile" ? "text-blue-600" : "text-gray-700"}`}>Profile</button>
+          </div>
+          <div className="text-gray-500 text-sm">{user.name}</div>
+        </div>
+      </nav>
+    );
+  }
+
+  // Add favorite handler
+  function handleFavorite(type, value) {
+    setFavorites((prev) => {
+      const updated = { ...prev };
+      if (!updated[type].includes(value)) {
+        updated[type] = [...updated[type], value];
+      } else {
+        updated[type] = updated[type].filter((v) => v !== value);
+      }
+      return updated;
+    });
+  }
+
+  // Add recommendation logic (simple: recommend events with favorite artists/venues)
+  useEffect(() => {
+    if (events.length > 0) {
+      const recs = events.filter(
+        (event) =>
+          favorites.artists.includes(event.artist) ||
+          favorites.venues.includes(event.venue)
+      );
+      setRecommendations(recs);
+      setDashboardEvents(events.slice(0, 3)); // Upcoming events (first 3 for demo)
+    }
+  }, [events, favorites]);
+
   if (currentView === "landing") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
@@ -328,6 +381,7 @@ export default function App() {
   if (currentView === "events") {
     return (
       <div className="min-h-screen bg-gray-50">
+        <NavigationBar />
         {/* Header */}
         <header className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -551,6 +605,20 @@ export default function App() {
                         </a>
                       )}
                     </div>
+                    <div className="mt-2">
+                      <button
+                        onClick={() => handleFavorite("artists", event.artist)}
+                        className={`text-xs px-2 py-1 rounded-full border ${favorites.artists.includes(event.artist) ? "bg-blue-600 text-white" : "bg-white text-blue-600 border-blue-600"}`}
+                      >
+                        {favorites.artists.includes(event.artist) ? "★ Favorite Artist" : "☆ Favorite Artist"}
+                      </button>
+                      <button
+                        onClick={() => handleFavorite("venues", event.venue)}
+                        className={`text-xs px-2 py-1 rounded-full border ml-2 ${favorites.venues.includes(event.venue) ? "bg-green-600 text-white" : "bg-white text-green-600 border-green-600"}`}
+                      >
+                        {favorites.venues.includes(event.venue) ? "★ Favorite Venue" : "☆ Favorite Venue"}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -568,6 +636,83 @@ export default function App() {
               </button>
             </div>
           )}
+        </main>
+      </div>
+    );
+  }
+
+  if (currentView === "profile") {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <NavigationBar />
+        <main className="max-w-3xl mx-auto px-4 py-8">
+          <h2 className="text-2xl font-bold mb-4">User Profile</h2>
+          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div className="mb-2"><span className="font-semibold">Name:</span> {user.name}</div>
+            <div className="mb-2"><span className="font-semibold">Email:</span> {user.email}</div>
+          </div>
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold mb-2">Preferences</h3>
+            <div className="mb-2">
+              <span className="font-semibold">Favorite Artists:</span> {favorites.artists.length > 0 ? favorites.artists.join(", ") : "None"}
+            </div>
+            <div className="mb-2">
+              <span className="font-semibold">Favorite Venues:</span> {favorites.venues.length > 0 ? favorites.venues.join(", ") : "None"}
+            </div>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Booking History</h3>
+            {user.bookingHistory.length === 0 ? (
+              <div className="text-gray-500">No bookings yet.</div>
+            ) : (
+              <ul className="list-disc pl-5">
+                {user.bookingHistory.map((booking, idx) => (
+                  <li key={idx}>{booking}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (currentView === "dashboard") {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <NavigationBar />
+        <main className="max-w-5xl mx-auto px-4 py-8">
+          <h2 className="text-2xl font-bold mb-4">Personalized Dashboard</h2>
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold mb-2">Upcoming Events</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {dashboardEvents.map((event) => (
+                <div key={event.id} className="bg-white rounded-lg shadow p-4 flex flex-col">
+                  <div className="font-semibold text-blue-600 mb-1">{event.title}</div>
+                  <div className="text-gray-600 text-sm mb-1">{event.artist} @ {event.venue}</div>
+                  <div className="text-gray-500 text-xs mb-2">{event.date} {event.time}</div>
+                  <button onClick={() => setCurrentView("events")}>View Event</button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Recommended For You</h3>
+            {recommendations.length === 0 ? (
+              <div className="text-gray-500">No recommendations yet. Favorite artists or venues to get started!</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {recommendations.map((event) => (
+                  <div key={event.id} className="bg-white rounded-lg shadow p-4 flex flex-col">
+                    <div className="font-semibold text-purple-600 mb-1">{event.title}</div>
+                    <div className="text-gray-600 text-sm mb-1">{event.artist} @ {event.venue}</div>
+                    <div className="text-gray-500 text-xs mb-2">{event.date} {event.time}</div>
+                    <button onClick={() => setCurrentView("events")}>View Event</button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </main>
       </div>
     );
