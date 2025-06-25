@@ -1,12 +1,13 @@
 # 🎫 Show Time - Full-Stack Ticket Booking Platform
 
-A modern, production-ready ticket booking application similar to Ticketmaster, built with React, Node.js, and PostgreSQL. Features real-time seat selection, secure payments, comprehensive search and filtering, and Ticketmaster API integration.
+A modern, production-ready ticket booking application similar to Ticketmaster, built with React, Node.js, and PostgreSQL. Features real-time seat selection, secure payments, comprehensive search and filtering, Ticketmaster API integration, personalized user experience, and beautiful dark mode interface.
 
 ![Ticket Event Platform](https://img.shields.io/badge/React-18.2.0-blue?style=for-the-badge&logo=react)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-green?style=for-the-badge&logo=node.js)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue?style=for-the-badge&logo=postgresql)
 ![Docker](https://img.shields.io/badge/Docker-Ready-blue?style=for-the-badge&logo=docker)
 ![Ticketmaster API](https://img.shields.io/badge/Ticketmaster-API-orange?style=for-the-badge)
+![Dark Mode](https://img.shields.io/badge/Dark%20Mode-Supported-purple?style=for-the-badge)
 
 ## ✨ Features
 
@@ -19,11 +20,20 @@ A modern, production-ready ticket booking application similar to Ticketmaster, b
   - 🎯 **Category Filtering**: Browse by Concert, Theater, Sports, or All events
   - 📊 **Sorting Options**: Sort by date, price, or name
   - 🎨 **Real-time Results**: Instant filtering and search results
+- **Personalized User Experience**:
+  - 👤 **User Profiles**: Complete profile management with preferences and booking history
+  - ⭐ **Favorite Artists/Venues**: Save your favorite performers and venues for quick access
+  - 🧠 **Smart Recommendations**: AI-powered event suggestions based on your favorites and history
+  - 📊 **Personalized Dashboard**: Custom homepage with upcoming events and tailored recommendations
+- **Enhanced Event Browsing**:
+  - 🎬 **Event Previews**: Watch video or listen to audio previews of events
+  - 🎨 **Enhanced Event Cards**: Rich event information with improved layout and visual polish
+  - 🌙 **Dark Mode**: Toggle between light and dark themes for comfortable browsing
+  - 📱 **Responsive Design**: Optimized for all device sizes with smooth animations
 - **Ticketmaster Integration**: Real event data from Ticketmaster API with live pricing and availability
 - **Interactive Seat Selection**: Real-time seat map with live availability updates
 - **Secure Booking**: 5-minute seat holds with automatic release
 - **Payment Processing**: Stripe integration for secure ticket purchases
-- **User Dashboard**: View booking history and manage profile
 - **Mobile Responsive**: Optimized for all device sizes
 - **Beautiful UI**: Modern design with Tailwind CSS and smooth animations
 
@@ -44,6 +54,8 @@ A modern, production-ready ticket booking application similar to Ticketmaster, b
 - **External APIs**: Ticketmaster API integration for real event data
 - **Search & Filter Engine**: Advanced client-side filtering with real-time updates
 - **Error Handling**: Graceful fallbacks and user-friendly error messages
+- **Theme Management**: Dynamic dark/light mode switching with persistent preferences
+- **Media Integration**: Support for video and audio event previews
 
 ## 🏗️ Architecture
 
@@ -67,7 +79,7 @@ ticket-event-app/
 │   │   └── 🚀 main.jsx           # Application entry point
 │   ├── 🐳 Dockerfile             # Frontend container configuration
 │   ├── 🌐 nginx.conf             # Nginx reverse proxy config
-│   ├── 🎨 tailwind.config.js     # Tailwind CSS configuration
+│   ├── 🎨 tailwind.config.js     # Tailwind CSS configuration (with dark mode)
 │   ├── ⚡ vite.config.js         # Vite build configuration
 │   └── 📦 package.json           # Frontend dependencies
 ├── 🐳 docker-compose.yml         # Multi-service orchestration
@@ -176,9 +188,9 @@ The seed script creates these accounts for testing:
 | 👨‍💼 Admin | `admin@ticketevent.com` | `admin123` |
 | 👤 User | `user@ticketevent.com` | `user123` |
 
-## 🎯 How to Use the Search & Filter Features
+## 🎯 How to Use the Features
 
-### 🔍 Search Functionality
+### 🔍 Search & Filter Functionality
 - **Search Bar**: Type to search for events, artists, venues, or locations
 - **Real-time Results**: Results update as you type
 - **Location Filter**: Enter a city name to find events in that location
@@ -210,6 +222,64 @@ The seed script creates these accounts for testing:
 ### 🧹 Clear Filters
 - Use the **"Clear Filters"** button to reset all search and filter options
 - Results summary shows how many events match your criteria
+
+## 👤 User Experience Features
+
+### 🏠 Personalized Dashboard
+- **Custom Homepage**: View upcoming events and personalized recommendations
+- **Smart Recommendations**: Events suggested based on your favorite artists and venues
+- **Quick Access**: Navigate between Dashboard, Events, and Profile seamlessly
+
+### 👤 User Profile Management
+- **Profile Information**: View and manage your account details
+- **Preferences**: See your favorite artists and venues in one place
+- **Booking History**: Track all your past and upcoming bookings
+- **Account Settings**: Manage your preferences and account information
+
+### ⭐ Favorites System
+- **Favorite Artists**: Click the star button on any event to favorite the artist
+- **Favorite Venues**: Save your preferred venues for quick access
+- **Smart Recommendations**: Get event suggestions based on your favorites
+- **Easy Management**: View and manage all favorites from your profile
+
+### 🎬 Event Previews
+- **Video Previews**: Watch short video clips of events when available
+- **Audio Previews**: Listen to audio samples for music events
+- **Enhanced Cards**: Rich event information with preview media
+- **Interactive Elements**: Hover effects and smooth animations
+
+## 🌙 Visual Features
+
+### 🌓 Dark Mode
+- **Theme Toggle**: Switch between light and dark themes using the toggle in the navigation bar
+- **Persistent Preference**: Your theme choice is remembered during the session
+- **Comprehensive Support**: All components and pages support both themes
+- **Eye-Friendly**: Dark mode reduces eye strain in low-light environments
+
+### 🎨 Enhanced Event Cards
+- **Rich Information**: Display comprehensive event details including:
+  - Event title and artist
+  - Venue, city, and state
+  - Date and time
+  - Price range
+  - Available seats
+  - Category badges
+- **Interactive Elements**:
+  - Hover effects for better user feedback
+  - Favorite buttons for artists and venues
+  - Preview media when available
+  - Responsive design for all screen sizes
+- **Visual Polish**:
+  - Smooth transitions and animations
+  - Consistent spacing and typography
+  - Professional color scheme
+  - Clear call-to-action buttons
+
+### 📱 Responsive Design
+- **Mobile Optimized**: Perfect experience on smartphones and tablets
+- **Desktop Friendly**: Full-featured interface on larger screens
+- **Touch Friendly**: Optimized for touch interactions
+- **Cross-Platform**: Works seamlessly across all devices and browsers
 
 ## 📚 API Documentation
 
@@ -343,7 +413,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - **Ticketmaster API** for providing real event data
-- **Tailwind CSS** for the beautiful UI components
+- **Tailwind CSS** for the beautiful UI components and dark mode support
 - **Prisma** for the excellent database ORM
 - **Socket.IO** for real-time functionality
 - **Stripe** for secure payment processing

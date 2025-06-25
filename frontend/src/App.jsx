@@ -36,6 +36,18 @@ export default function App() {
   const [recommendations, setRecommendations] = useState([]);
   const [dashboardEvents, setDashboardEvents] = useState([]);
 
+  // Add new state for theme
+  const [theme, setTheme] = useState('light');
+
+  // Apply dark mode to <html> element
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
   // Fetch events from Ticketmaster API
   const fetchEvents = async (category = "All", size = 50) => {
     setLoading(true);
@@ -225,7 +237,8 @@ export default function App() {
       priceMax: 299,
       image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop",
       category: "Concert",
-      availableSeats: 150
+      availableSeats: 150,
+      previewUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
     },
     {
       id: 2,
@@ -241,7 +254,8 @@ export default function App() {
       priceMax: 450,
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
       category: "Theater",
-      availableSeats: 75
+      availableSeats: 75,
+      previewUrl: "https://www.w3schools.com/html/horse.mp3"
     },
     {
       id: 3,
@@ -257,7 +271,8 @@ export default function App() {
       priceMax: 800,
       image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=300&fit=crop",
       category: "Sports",
-      availableSeats: 200
+      availableSeats: 200,
+      previewUrl: ""
     }
   ];
 
@@ -310,14 +325,23 @@ export default function App() {
   // Add navigation bar
   function NavigationBar() {
     return (
-      <nav className="bg-white shadow-sm border-b mb-4">
+      <nav className="bg-white dark:bg-gray-900 shadow-sm border-b mb-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-3">
           <div className="flex items-center space-x-4">
-            <button onClick={() => setCurrentView("dashboard")} className={`text-sm font-medium ${currentView === "dashboard" ? "text-blue-600" : "text-gray-700"}`}>Dashboard</button>
-            <button onClick={() => setCurrentView("events")} className={`text-sm font-medium ${currentView === "events" ? "text-blue-600" : "text-gray-700"}`}>Events</button>
-            <button onClick={() => setCurrentView("profile")} className={`text-sm font-medium ${currentView === "profile" ? "text-blue-600" : "text-gray-700"}`}>Profile</button>
+            <button onClick={() => setCurrentView("dashboard")} className={`text-sm font-medium ${currentView === "dashboard" ? "text-blue-600 dark:text-blue-400" : "text-gray-700 dark:text-gray-200"}`}>Dashboard</button>
+            <button onClick={() => setCurrentView("events")} className={`text-sm font-medium ${currentView === "events" ? "text-blue-600 dark:text-blue-400" : "text-gray-700 dark:text-gray-200"}`}>Events</button>
+            <button onClick={() => setCurrentView("profile")} className={`text-sm font-medium ${currentView === "profile" ? "text-blue-600 dark:text-blue-400" : "text-gray-700 dark:text-gray-200"}`}>Profile</button>
           </div>
-          <div className="text-gray-500 text-sm">{user.name}</div>
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-500 dark:text-gray-300 text-sm">{user.name}</span>
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-700 text-xs"
+              title="Toggle dark mode"
+            >
+              {theme === 'dark' ? '🌙 Dark' : '☀️ Light'}
+            </button>
+          </div>
         </div>
       </nav>
     );
@@ -552,8 +576,8 @@ export default function App() {
           {!loading && !error && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredEvents.map((event) => (
-                <div key={event.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="h-48 bg-gray-200">
+                <div key={event.id} className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow border border-gray-100 dark:border-gray-800">
+                  <div className="h-48 bg-gray-200 dark:bg-gray-800 relative">
                     <img 
                       src={event.image} 
                       alt={event.title}
@@ -562,35 +586,45 @@ export default function App() {
                         e.target.src = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop";
                       }}
                     />
+                    {/* Event Preview (mock: show if event.previewUrl exists) */}
+                    {event.previewUrl && (
+                      <div className="absolute bottom-2 right-2 bg-white dark:bg-gray-900 bg-opacity-80 dark:bg-opacity-80 rounded p-1 shadow">
+                        {event.previewUrl.endsWith('.mp4') ? (
+                          <video src={event.previewUrl} controls className="w-32 h-16 rounded" />
+                        ) : (
+                          <audio src={event.previewUrl} controls className="w-32" />
+                        )}
+                      </div>
+                    )}
                   </div>
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                      <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-full">
                         {event.category}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-500 dark:text-gray-300">
                         {event.availableSeats} seats left
                       </span>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
                       {event.title}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-2">{event.artist}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{event.artist}</p>
                     <div className="space-y-1 mb-4">
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
                         📍 {event.venue}, {event.city}{event.state && `, ${event.state}`}
                       </p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
                         📅 {event.date !== "TBD" ? new Date(event.date).toLocaleDateString() : "TBD"} at {event.time}
                       </p>
-                      <p className="text-sm font-medium text-green-600">
+                      <p className="text-sm font-medium text-green-600 dark:text-green-400">
                         💰 {event.price}
                       </p>
                     </div>
-                    <div className="space-y-2">
+                    <div className="flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0">
                       <button
                         onClick={() => handleBookTicket(event.id)}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
                       >
                         Book Tickets
                       </button>
@@ -599,26 +633,37 @@ export default function App() {
                           href={event.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block w-full text-center text-blue-600 hover:text-blue-800 text-sm font-medium"
+                          className="flex-1 block text-center bg-white dark:bg-gray-800 border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900 text-sm font-medium py-2 px-4 rounded-md transition-colors"
                         >
                           View on Ticketmaster →
                         </a>
                       )}
                     </div>
-                    <div className="mt-2">
+                    <div className="mt-4 flex flex-wrap gap-2">
                       <button
                         onClick={() => handleFavorite("artists", event.artist)}
-                        className={`text-xs px-2 py-1 rounded-full border ${favorites.artists.includes(event.artist) ? "bg-blue-600 text-white" : "bg-white text-blue-600 border-blue-600"}`}
+                        className={`text-xs px-2 py-1 rounded-full border ${favorites.artists.includes(event.artist) ? "bg-blue-600 text-white" : "bg-white dark:bg-gray-900 text-blue-600 border-blue-600"}`}
                       >
                         {favorites.artists.includes(event.artist) ? "★ Favorite Artist" : "☆ Favorite Artist"}
                       </button>
                       <button
                         onClick={() => handleFavorite("venues", event.venue)}
-                        className={`text-xs px-2 py-1 rounded-full border ml-2 ${favorites.venues.includes(event.venue) ? "bg-green-600 text-white" : "bg-white text-green-600 border-green-600"}`}
+                        className={`text-xs px-2 py-1 rounded-full border ${favorites.venues.includes(event.venue) ? "bg-green-600 text-white" : "bg-white dark:bg-gray-900 text-green-600 border-green-600"}`}
                       >
                         {favorites.venues.includes(event.venue) ? "★ Favorite Venue" : "☆ Favorite Venue"}
                       </button>
                     </div>
+                    {/* Enhanced: Show preview if available */}
+                    {event.previewUrl && (
+                      <div className="mt-4">
+                        <span className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Preview:</span>
+                        {event.previewUrl.endsWith('.mp4') ? (
+                          <video src={event.previewUrl} controls className="w-full rounded" />
+                        ) : (
+                          <audio src={event.previewUrl} controls className="w-full" />
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
